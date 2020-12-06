@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"
+    integrity="sha512-t4HzsbLJw+4jV+nmiiIsz/puioH2aKIjuI1ho1NIqJAJ2GNVLPTy51IklYefYdrkRE583KEzTcgmO5Wb6jVgYw=="
+    crossorigin="anonymous"></script>
+</head>
+<style>
+  body {
+    display: block;
+    height: 100%;
+    width: 100%;
+
+
+  }
+
+  textarea {
+    resize: none;
+  }
+</style>
+
+<body>
+
+  <h1 style="width: calc(100% - 6px - 16px);">chat@kwa</h1>
+  <div>
+    <textarea id="urlToShare" name="urlToShare" rows="1" onclick="this.focus();this.select()" readonly="readonly"
+      style="width: calc(100% - 6px - 16px);"></textarea>
+  </div>
+  <pre id="messages" style="height: 400px; overflow: scroll; width: calc(100% - 16px)"></pre>
+  <input type="text" id="messageBox" placeholder="Type your message here"
+    style="display: inline-block; width: calc(70% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
+  <input type="text" id="salt" placeholder="encryption key" title="change the value for more security"
+    style="display: inline-block; width: calc(30% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
+  <button id="send" title="Send Message!" style="width: calc(100% - 6px - 16px); height: 30px;">Send Message</button>
+
+  <script>
+    let roomId = '**theRoom**';
+    let myId = null;
+    let lastUserMessageId = null;
+    (function () {
+      const sendBtn = document.querySelector('#send');
+      const messages = document.querySelector('#messages');
+      const messageBox = document.querySelector('#messageBox');
+
+      let ws;
+
+      function wsResponse(data) {
+        const obj = JSON.parse(data);
+
+        const message = obj.message;
+        const meta = obj.meta;
+        const room = obj.room;
+        const id = obj.id;
+        if (meta === 'myconnexion') {
+          myId = id;
+          document.getElementById('urlToShare').innerText = window.location;
+        } else if (meta === 'connexion') {
+          if (id !== myId) {
+            showMessage('l\'utilisateur ' + id + ' est connecté', id);
+          } else {
+            showMessage('vous est connecté à la room ' + room, id);
+          }
+        } else if (meta === 'message') {
+          if (id !== myId) showMessage(id + ' dit: ' + Decrypt(message, getSalt()), id);
+        } else if (meta === 'leave') {
+          showMessage('l\'utilisateur ' + id + ' est parti', id);
+        }
+      }
+      function getSalt(){
+        return document.getElementById('salt').value;
+      }
+      function showMessage(message, id) {
+        let spacer = '\n';
+        if (lastUserMessageId != id) {
+          spacer = '\n\n';
+          lastUserMessageId = id;
+        }
+        console.log(id, myId, (id === myId));
+
+        messages.textContent += `${spacer}${message}`;
+        messages.scrollTop = messages.scrollHeight;
+        messageBox.value = '';
+      }
+
+      function init() {
+        if (ws) {
+          ws.onerror = ws.onopen = ws.onclose = null;
+          ws.close();
+        }
+        console.log(window.location.origin);
+        console.log(window.location.host);
+        console.log(window.location.href);
+        console.log(window.location.protocol);
+        let isSecur = (window.location.protocol === 'https:');
+        console.log('isSecur?:', isSecur);
+        ws = new WebSocket(((isSecur?'wss://':'ws://') + window.location.host  + '/msg'));
+        ws.onopen = () => {
+          console.log('Connection opened!');
+          ws.send(JSON.stringify({
+            meta: 'join',
+            room: roomId
+          }));
+        }
+        ws.onmessage = ({
+          data
+        }) => wsResponse(data);
+
+        ws.onclose = function () {
+          ws = null;
+        }
+        window.onbeforeunload = function () {
+          ws.send(JSON.stringify({
+            meta: 'leave',
+            room: roomId
+          }));
+        }
+      }
+
+
+
+
+      sendBtn.onclick = function () {
+        if (!ws) {
+          showMessage("No WebSocket connection :(");
+          return;
+        }
+        let msgEnc = Encrypt(messageBox.value, getSalt());
+        console.log('encrypted msg:', msgEnc);
+
+        ws.send(JSON.stringify({
+          message: msgEnc,
+          room: roomId
+        }));
+        showMessage(messageBox.value, myId);
+      }
+
+      init();
+    })();
+
+    function Encrypt(msg, keyPhrase) {
+      encrypted  = CryptoJS.AES.encrypt(msg, keyPhrase);
+      console.log(encrypted.toString());
+      return encrypted.toString();
+    }
+
+    function Decrypt(encrypted, keyPhrase) {
+      let decrypted = CryptoJS.AES.decrypt(encrypted, keyPhrase);
+      return decrypted.toString(CryptoJS.enc.Utf8);
+    }
+    
+  </script>
+</body>
+
+</html>
