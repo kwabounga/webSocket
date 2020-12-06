@@ -26,6 +26,7 @@ let lastUserMessageId = null;
             } else {
                 const history = obj.history;
                 console.log(history);
+                messages.textContent = '';
                 history.forEach(h => {
                     let d = decryptAndShow(h[1])
                     let repText = ((h[0]=== myId)?d:`l'utilisateur ${h[0]} dit: ${d}`);
