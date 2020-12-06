@@ -3,7 +3,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const ChatFront = require('./exports/chatFront');
 const {Encrypt, Decrypt} = require('./exports/encryption');
-const port = 80;
+const port = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 
