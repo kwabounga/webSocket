@@ -65,7 +65,7 @@ let lastUserMessageId = null;
         
         messages.textContent += `${spacer}${message}`;
         messages.scrollTop = messages.scrollHeight;
-        messageBox.value = '';
+        
     }
 
     function init() {
@@ -126,7 +126,9 @@ let lastUserMessageId = null;
             message: msgEnc,
             room: roomId
         }));
+
         showMessage(messageBox.value, myId);
+        messageBox.value = '';
     }
 
     messageBox.addEventListener('keypress', function (evt) {
