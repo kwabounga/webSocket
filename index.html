@@ -10,88 +10,9 @@
 <body>
 
   <h1>chat@kwa</h1>
-  <pre id="messages" style="height: 400px; overflow: scroll"></pre>
-  <input type="text" id="messageBox" placeholder="Type your message here"
-    style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;" />
-  <button id="send" title="Send Message!" style="width: 100%; height: 30px;">Send Message</button>
-
-  <script>
-    let roomId = '**theRoom**';
-    let myId = null;
-    (function () {
-      const sendBtn = document.querySelector('#send');
-      const messages = document.querySelector('#messages');
-      const messageBox = document.querySelector('#messageBox');
-
-      let ws;
-
-      function wsResponse(data) {
-        const obj = JSON.parse(data);
-
-        const message = obj.message;
-        const meta = obj.meta;
-        const room  = obj.room;
-        const id  = obj.id;
-        if(meta === 'myconnexion'){
-          myId = id
-        }else if(meta === 'connexion'){
-          showMessage('l\'utilisateur '+ id + ' est connecté', id);
-        } else if(meta === 'message'){
-          if(id !== myId) showMessage(id + ' dit: ' + message, id);
-        } else if(meta === 'leave'){
-          showMessage('l\'utilisateur '+ id + ' est parti', id);
-        }
-      }
-      function showMessage(message, id) {
-        let spacer = (id == myId)?`\n`:`\n\n`;
-        messages.textContent += `${spacer}${message}`;
-        messages.scrollTop = messages.scrollHeight;
-        messageBox.value = '';
-      }
-
-      function init() {
-        if (ws) {
-          ws.onerror = ws.onopen = ws.onclose = null;
-          ws.close();
-        }
-
-        ws = new WebSocket('ws://localhost:6969/msg');
-        ws.onopen = () => {
-          console.log('Connection opened!');
-          ws.send(JSON.stringify({
-            meta: 'join',
-            room: roomId
-          }));
-        }
-        ws.onmessage = ({
-          data
-        }) => wsResponse(data);
-
-        ws.onclose = function () {
-          ws.send(JSON.stringify({
-            meta: 'leave',
-            room: roomId
-          }));
-          ws = null;
-        }
-      }
-
-      sendBtn.onclick = function () {
-        if (!ws) {
-          showMessage("No WebSocket connection :(");
-          return;
-        }
-
-        ws.send(JSON.stringify({
-          message: messageBox.value,
-          room: roomId
-        }));
-        showMessage(messageBox.value);
-      }
-
-      init();
-    })();
-  </script>
+  <div>
+    
+  </div>
 </body>
 
 </html>

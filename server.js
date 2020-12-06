@@ -53,7 +53,10 @@ wss.on("connection", socket => {
 
     if (meta === "join") {
       console.log('join');
-      if (!rooms[room]) rooms[room] = {}; // create the room
+      if (!rooms[room]) {
+        rooms[room] = {}; // create the room
+        rooms[room]['history'] = [];
+      }
       if (!rooms[room][uuid]) rooms[room][uuid] = socket; // join the room
 
       //s'envoi un message a lui mem pour  valider et afficher la connexion
@@ -67,7 +70,8 @@ wss.on("connection", socket => {
         meta: 'connexion',
         id: uuid,
         room: room,
-        message: message
+        message: message,
+        history: rooms[room]['history']
       })
     } else if (meta === "leave") {
       console.log('leave');
@@ -79,7 +83,9 @@ wss.on("connection", socket => {
         message: message
       })
       leave(room);
-    } else if (!meta) {
+    } else if (meta === 'message') {      
+      let h = [uuid, obj.message, obj.meta ,obj.room];
+      rooms[room]['history'].push(h);
       console.log('message');
       sendMsgToAll(room, {
         meta: 'message',
@@ -99,14 +105,17 @@ wss.on("connection", socket => {
 // send the message to all in the room
 function sendMsgToAll(room, objMsg) {
   let msgHandler = JSON.stringify(objMsg);
-  Object.entries(rooms[room]).forEach(([key, sock]) => sock.send(msgHandler));
+  Object.entries(rooms[room]).forEach(([key, sock]) => {
+    if(key != 'history')sock.send(msgHandler);
+  });
 }
 
 
 
 
 app.get('/tchat/', function (req, res, next) {
-  res.send('index');
+  // res.send('index');
+  res.sendFile(__dirname +'/index.html');
 });
 // connection à la page , puis renvoi la reponse
 app.get('/tchat/room/:id', function (req, res, next) {
@@ -140,8 +149,6 @@ if (thereIsPhusion()) {
   });
 }
 
-/*server.listen(port, function () {
-  console.log(`Server is listening on ${port}!`)
-})*/
+
 
 

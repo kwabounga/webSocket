@@ -19,18 +19,24 @@ let lastUserMessageId = null;
         if (meta === 'myconnexion') {
             myId = id;
             document.getElementById('urlToShare').innerText = window.location;
+            
         } else if (meta === 'connexion') {
             if (id !== myId) {
                 showMessage('l\'utilisateur ' + id + ' est connecté', id);
             } else {
+                const history = obj.history;
+                console.log(history);
+                history.forEach(h => {
+                    let d = decryptAndShow(h[1])
+                    let repText = ((h[0]=== myId)?d:`l'utilisateur ${h[0]} dit: ${d}`);
+                    showMessage(repText, h[0]);
+                });
                 showMessage('vous est connecté à la room ' + room, id);
             }
         } else if (meta === 'message') {
-            let decrypted = Decrypt(message, getSalt());
-            if (decrypted.trim() === ''){
-                decrypted = '** mauvaise clé de cryptage **'
-            }
-            if (id !== myId) showMessage(id + ' dit: ' + decrypted, id);
+            let decrypted = decryptAndShow(message);
+            let repText = `l'utilisateur ${id} dit: ${decrypted}`
+            if (id !== myId) showMessage(repText, id);
         } else if (meta === 'leave') {
             showMessage('l\'utilisateur ' + id + ' est parti', id);
         }
@@ -40,15 +46,22 @@ let lastUserMessageId = null;
         return document.getElementById('salt').value;
     }
 
-    function showMessage(message, id) {
-        
+    function decryptAndShow(encryptedMessage) {
+        let decrypted = Decrypt(encryptedMessage, getSalt());
+        if (decrypted.trim() === ''){
+            decrypted = '** mauvaise clé de cryptage **';
+        }
+        return decrypted;
+    }
+
+    function showMessage(message, id) {        
         let spacer = '\n';
         if (lastUserMessageId != id) {
             spacer = '\n\n';
             lastUserMessageId = id;
         }
         console.log(id, myId, (id === myId));
-
+        
         messages.textContent += `${spacer}${message}`;
         messages.scrollTop = messages.scrollHeight;
         messageBox.value = '';
@@ -108,6 +121,7 @@ let lastUserMessageId = null;
         console.log('encrypted msg:', msgEnc);
 
         ws.send(JSON.stringify({
+            meta: 'message',
             message: msgEnc,
             room: roomId
         }));
