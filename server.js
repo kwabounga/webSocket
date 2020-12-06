@@ -120,6 +120,10 @@ app.get('/tchat/room/:id', function (req, res, next) {
   res.send(htmlResponse);
 });
 
+app.get('/tchat/public/:file', function (req, res, next) {
+  res.sendFile(__dirname +'/public/'+ req.params.file);
+});
+
 // connection à la page , puis renvoi la reponse
 app.get('/tchat/*', function (req, res, next) {
   res.send('forbidden: ' + req.url);
