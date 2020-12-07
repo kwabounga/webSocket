@@ -21,26 +21,26 @@
         text-align: center;
     }
 
-    textarea {
-        resize: none;
-    }
-
-    textarea {
+    
+    #urlToShareWrapper {
         border: 0;
         background: black;
-        display: block;
+        display: inline-flex;
         margin-left: 20px auto;
         margin-right: 20px auto;
-        text-align: center;
+        text-align: right;
         border: 2px solid #3498db;
         padding: 10px 10px;
         width: 250px;
         outline: none;
         color: white;
         border-radius: 24px;
-        transition: 0.25s
+        transition: 0.25s;
+        width: calc(100% - 30px);
+        margin-left: auto;
+        margin-right: auto;
     }
-
+   
     pre {
         color: rgb(255, 221, 169);
     }
@@ -93,15 +93,21 @@
         /* margin-bottom: 10px; */
         padding: 10px;
         transition: 0.25s;
-        bottom: 2em;
+        
+        resize: none;
+        min-height: 48px;
+        height: fit-content;
+        min-height: 48px;
     }
 
+   
     #salt {
         display: inline-block;
         width: calc(30% - 2em);
         margin: 0;
         margin-bottom: 10px;
         padding: 10px;
+        bottom: 1.2em;
     }
 
     #send {
@@ -141,12 +147,12 @@
         display: block;
         padding: 0.5em;
         background-color: #4d3d27;
-        border-radius: 1em 1em 0px 1em;
         width: max-content;
         margin-bottom: 0.5em;
         max-width: 100%;
         height: auto;
-        place-self: start end;
+        border-radius: 1em 1em 1em 0px;
+        place-self: start start;
     }
     .msgBox::after {
         clear: both;
@@ -155,9 +161,9 @@
     .myMsgs {
         background-color: #5e503c;
         /* justify-self: left; */
-        border-radius: 1em 1em 1em 0px;
-        right:0;
-        place-self: start start;
+        border-radius: 1em 1em 0px 1em;
+        place-self: start end;
+        
     }
     .avatar {
         display: inline-block;
@@ -172,8 +178,26 @@
         align-self: center;
     }
     .msgText {
-        display: inline;
+        display: inline-block;
         color: #c0aa89;
+        text-align: left;
+    }
+    .myMsgs > .msgText {
+        text-align: right;
+        
+    }
+    #urlToShare {
+        border: 0;
+        background: none;
+        height: auto;
+        text-align: center;        
+        outline: none;
+        color: white;
+        resize: none;
+        display: inline-block;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>
 
@@ -181,16 +205,18 @@
 
     <h1 style="width: calc(100% - 6px - 16px);">Discussion privée</h1>
     <h3>Connecté en tant que: <%= myPseudo %></h3>
-    <div>
+    <div id="urlToShareWrapper">
         <textarea id="urlToShare" name="urlToShare" rows="1"
             onclick="this.focus();this.select();document.execCommand('copy');" readonly="readonly"
-            style="width: calc(100% - 30px);"></textarea>
+            style=""></textarea>
+            <i class="fas fa-clipboard" onclick="urlToShare.focus();urlToShare.select();document.execCommand('copy');"
+            style="align-self: center;"></i>
     </div>
 
     <div class="box">
         <div id="messages" class=""></div>
         <div class="wrapInput">
-            <input type="text" id="messageBox" placeholder="Ecrire vos messages ici" />
+            <textarea type="text" rows="1" wrap="hard" id="messageBox" placeholder="Ecrire vos messages ici" autofocus></textarea>
             <input type="text" id="salt" placeholder="encryption key" title="change the value for more security" />
         </div>
 

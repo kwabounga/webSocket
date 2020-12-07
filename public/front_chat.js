@@ -6,6 +6,7 @@ let lastUserMessagePseudo = null;
     const sendBtn = document.querySelector('#send');
     const messages = document.querySelector('#messages');
     const messageBox = document.querySelector('#messageBox');
+    const urlToShare = document.querySelector('#urlToShare');
 
     let ws;
 
@@ -20,7 +21,7 @@ let lastUserMessagePseudo = null;
         if (meta === 'myconnexion') {
             myId = id;
             
-            document.getElementById('urlToShare').innerText = window.location.href.replace(('/' + myPseudo), '');
+            urlToShare.innerText = window.location.href.replace(('/' + myPseudo), '');
             
         } else if (meta === 'connexion') {
             if (id !== myId) {
@@ -123,12 +124,22 @@ let lastUserMessagePseudo = null;
 
         showMessage(messageBox.value, myPseudo);
         messageBox.value = '';
+        messageBox.style.height = '0';
     }
 
     messageBox.addEventListener('keypress', function (evt) {
+        console.log(evt.code, evt.keyCode, evt.key);
+        
         let enterKeyCode = 13;
         if (evt.keyCode === enterKeyCode) {
-            sendMessageHandler();
+            if (evt.shiftKey){
+                this.style.height = this.scrollHeight + 24 + 'px';
+                //messageBox.value += '\n';
+            }else {
+                evt.preventDefault();
+                
+                sendMessageHandler();
+            }
         }
     })
     sendBtn.onclick = sendMessageHandler
@@ -181,7 +192,7 @@ function createMessage(message, pseudo) {
     
     let msgText = document.createElement('div');
     msgText.classList.add('msgText');
-    msgText.innerHTML = message;
+    msgText.innerText = message;
 
     msgBox.appendChild(avatar);
     msgBox.appendChild(msgText);
@@ -195,7 +206,7 @@ function createInfoMessage(message, pseudo) {
     
     let msgText = document.createElement('div');
     msgText.classList.add('msgText');
-    msgText.innerHTML = message;
+    msgText.innerText = message;
     
     msgBox.appendChild(msgText);
     return msgBox;
