@@ -186,6 +186,6 @@ if (thereIsPhusion()) {
 
 
 function setBaseUrl(req) {
-  app.locals.baseUrl = 'https' + '://' + req.hostname+':'+ port + '/tchat/';
+  app.locals.baseUrl = 'https' + '://' + req.hostname+((port === process.env.PORT)?'':(':'+ port)) + '/tchat/';
 }
 
