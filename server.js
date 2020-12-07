@@ -81,7 +81,8 @@ wss.on("connection", socket => {
         room: room,
         meta: 'myconnexion',
         color: userColors[uuid],
-        pseudo: pseudo
+        pseudo: pseudo,
+        version: '0.1.7',
       }))
       // envoi un message a tous le monde pour annoncer la connection d'un autre utilisateur
       sendMsgToAll(room, {

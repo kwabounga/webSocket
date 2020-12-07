@@ -1,6 +1,6 @@
 {
   "name": "chatakwa",
-  "version": "0.0.1",
+  "version": "0.1.6",
   "scripts": {
     "start": "node server.js"
   },

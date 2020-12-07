@@ -1,6 +1,7 @@
 let myId = null;
 let myColor = null;
 let lastUserMessagePseudo = null;
+let version = null;
 
 let timeOutTitle;
 (function () {
@@ -21,15 +22,19 @@ let timeOutTitle;
         const id = obj.id;
         const pseudo = obj.pseudo;
         const color = obj.color;
+        const currentVersion = obj.version;
         if (meta === 'myconnexion') {
             myId = id;
             myColor = color;
             urlToShare.innerText = window.location.href.replace(('/' + myPseudo), '');
+            if(version && version !== currentVersion){document.location.reload();}
+            version = currentVersion;
             
         } else if (meta === 'connexion') {
             if (id !== myId) {
                 showMessage('>> ' + pseudo + ' est connecté', pseudo,color, true);
             } else {
+                
                 const history = obj.history;
                 console.log(history);
                 messages.textContent = '';
@@ -79,6 +84,7 @@ let timeOutTitle;
         console.log('isSecur?:', isSecur);
         ws = new WebSocket(((isSecur ? 'wss://' : 'ws://') + window.location.host + '/msg'));
         ws.onopen = () => {
+            
             console.log('Connection opened!');
             ws.send(JSON.stringify({
                 meta: 'join',
