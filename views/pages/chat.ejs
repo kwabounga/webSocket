@@ -65,9 +65,10 @@
 
     #messages {
         display: grid;
-        overflow: scroll;
+        overflow-y: scroll;
+        overflow-x: none;
         width: calc(100% - 16px - 2em);
-        height: calc(83vh - 17em);
+        max-height: calc(83vh - 17em);
         align-items : baseline;
     }
 
