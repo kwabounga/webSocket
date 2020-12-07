@@ -38,7 +38,7 @@ let timeOutTitle;
                     let repText = ((h[3]=== myPseudo)?d:`${h[3]} a dit: ${d}`);
                     showMessage(repText, h[3], h[2]);
                 });
-                showMessage('vous est connecté à la room ' + room, pseudo,myColor, true);
+                showMessage('vous êtes connecté à la room ' + room, pseudo,myColor, true);
             }
         } else if (meta === 'message') {
             let decrypted = decryptAndShow(message);
@@ -92,7 +92,7 @@ let timeOutTitle;
 
         ws.onclose = function () {
             ws = null;
-            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo','#3b96c0', true);
+            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo',myColor, true);
             init();
         }
         window.onbeforeunload = function () {
@@ -189,7 +189,7 @@ function showMessage(message, pseudo, color='#3b96c0', isInfo = false) {
     //     spacer = '\n\t';            
     // }
     lastUserMessagePseudo = pseudo;
-    let mb = isInfo?createInfoMessage(message, pseudo):createMessage(message, pseudo, color)
+    let mb = isInfo?createInfoMessage(message, pseudo,color):createMessage(message, pseudo, color)
     // messages.textContent += `${spacer}${message}`;
     messages.appendChild(mb);
     messages.scrollTop = messages.scrollHeight;
@@ -220,7 +220,7 @@ function createMessage(message, pseudo,color) {
     return msgBox;
 
 }
-function createInfoMessage(message, pseudo) {
+function createInfoMessage(message, pseudo,color) {
     console.log(message, pseudo);
     let msgBox = document.createElement('div');
     msgBox.classList.add('infoBox');  
@@ -228,7 +228,7 @@ function createInfoMessage(message, pseudo) {
     let msgText = document.createElement('div');
     msgText.classList.add('msgText');
     msgText.innerText = message;
-    
+    msgText.style ="color:"+color+";"
     msgBox.appendChild(msgText);
     return msgBox;
 
