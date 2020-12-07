@@ -1,7 +1,7 @@
 let myId = null;
 let lastUserMessagePseudo = null;
 
-
+let timeOutTitle;
 (function () {
     const sendBtn = document.querySelector('#send');
     const messages = document.querySelector('#messages');
@@ -40,7 +40,10 @@ let lastUserMessagePseudo = null;
         } else if (meta === 'message') {
             let decrypted = decryptAndShow(message);
             let repText = `(${pseudo}) - ${decrypted}`
-            if(id !== myId)showMessage(repText, pseudo);
+            if(id !== myId) {
+                showMessage(repText, pseudo);
+                changeTitle(pseudo + ' à envoyé un message!')
+            }
         } else if (meta === 'leave') {
             showMessage('>> ' + pseudo + ' est parti', pseudo, true);
         }
@@ -121,7 +124,7 @@ let lastUserMessagePseudo = null;
             room: roomId,
             pseudo: myPseudo,
         }));
-
+        
         showMessage(messageBox.value, myPseudo);
         messageBox.value = '';
         messageBox.style.height = '0';
@@ -213,3 +216,10 @@ function createInfoMessage(message, pseudo) {
 
 }
 
+function changeTitle(tmpTitle) {
+    if(timeOutTitle)clearTimeout(timeOutTitle);
+    timeOutTitle = setTimeout(function(){
+        window.document.title = 'Chat';
+    },2000)
+    window.document.title = tmpTitle;
+}
