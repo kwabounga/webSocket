@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <%- include('../partials/head'); %> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"
+    integrity="sha512-t4HzsbLJw+4jV+nmiiIsz/puioH2aKIjuI1ho1NIqJAJ2GNVLPTy51IklYefYdrkRE583KEzTcgmO5Wb6jVgYw=="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<%= baseUrl %>public/style.css"> 
+</head>
+<style>
+  body {
+    display: block;
+    height: 100vh;
+    width: 100%;
+  }
+
+  textarea {
+    resize: none;
+  }
+  textarea {
+    border: 0;
+    background: black;
+    display: block;
+    margin-left: 20px auto;
+    margin-right: 20px auto;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 10px 10px;
+    width: 250px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s
+  }
+  pre {
+      color:rgb(255, 221, 169);
+  }
+  #messages {
+    display: block;
+    overflow: scroll;
+    width: calc(100% - 16px);
+    height: calc(100vh - 20em);
+  }
+  #send {
+    border: 0;
+    background: rgb(0, 0, 0);
+    display: inline-block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #2ecc71;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer
+  }
+  #salt,
+  #messageBox {
+    border: 0;
+    background: #5e503c;
+    display: inline-block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #ad9b83;
+    padding: 14px 40px;
+    outline: none;
+    color:  #dfcdc1;
+    border-radius: 10px;
+    transition: 0.25s;
+  }
+  #send:hover {
+    background: #2ecc71;
+  }
+</style>
+
+<body>
+
+  <h1 style="width: calc(100% - 6px - 16px);">chat@kwa (<%= myPseudo %>)</h1>
+  <div>
+    <textarea id="urlToShare" name="urlToShare" rows="1" onclick="this.focus();this.select()" readonly="readonly"
+      style="width: calc(100% - 30px);"></textarea>
+  </div>
+  <pre id="messages"></pre>
+  <input type="text" id="messageBox" placeholder="Ecrire vos messages ici"
+    style="display: inline-block; width: calc(70% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
+  <input type="text" id="salt" placeholder="encryption key" title="change the value for more security"
+    style="display: inline-block; width: calc(30% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
+  <button id="send" style="width: calc(100% - 6px - 16px);" title="Ou appuyer sur la touche Entrer">Envoyer</button>
+
+  <!-- variable ecrite par le back lors de la creation de la page-->
+  <script>
+    var roomId = '<%= roomId %>';
+    var myPseudo = '<%= myPseudo %>';
+  </script>
+  <script src="<%= baseUrl %>public/front_chat.js"></script>
+</body>
+
+</html>

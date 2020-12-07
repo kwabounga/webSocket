@@ -1,9 +1,9 @@
 const fs = require('fs');
 
-function ChatFront(idRoom) {
+function ChatFront(idRoom, pseudo) {
     let html = getHtmlFromFile('./template_chat.html');
     
-    return html.replace('**theRoom**', idRoom);
+    return html.replace('**theRoom**', idRoom).replace('**thePseudo**', pseudo);
 }
 
 function getHtmlFromFile(filepath){

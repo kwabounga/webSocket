@@ -1,5 +1,5 @@
 let myId = null;
-let lastUserMessageId = null;
+let lastUserMessagePseudo = null;
 
 
 (function () {
@@ -16,30 +16,32 @@ let lastUserMessageId = null;
         const meta = obj.meta;
         const room = obj.room;
         const id = obj.id;
+        const pseudo = obj.pseudo;
         if (meta === 'myconnexion') {
             myId = id;
-            document.getElementById('urlToShare').innerText = window.location;
+            
+            document.getElementById('urlToShare').innerText = window.location.href.replace(('/' + myPseudo), '');
             
         } else if (meta === 'connexion') {
             if (id !== myId) {
-                showMessage('l\'utilisateur ' + id + ' est connecté', id);
+                showMessage('>> ' + pseudo + ' est connecté', pseudo);
             } else {
                 const history = obj.history;
                 console.log(history);
                 messages.textContent = '';
                 history.forEach(h => {
                     let d = decryptAndShow(h[1])
-                    let repText = ((h[0]=== myId)?d:`l'utilisateur ${h[0]} dit: ${d}`);
-                    showMessage(repText, h[0]);
+                    let repText = ((h[3]=== myPseudo)?d:`${h[3]} dit: ${d}`);
+                    showMessage(repText, h[3]);
                 });
-                showMessage('vous est connecté à la room ' + room, id);
+                showMessage('vous est connecté à la room ' + room, pseudo);
             }
         } else if (meta === 'message') {
             let decrypted = decryptAndShow(message);
-            let repText = `l'utilisateur ${id} dit: ${decrypted}`
-            if (id !== myId) showMessage(repText, id);
+            let repText = `- ${pseudo} dit: ${decrypted}`
+            if(id !== myId)showMessage(repText, pseudo);
         } else if (meta === 'leave') {
-            showMessage('l\'utilisateur ' + id + ' est parti', id);
+            showMessage('>> ' + pseudo + ' est parti', pseudo);
         }
     }
 
@@ -55,14 +57,13 @@ let lastUserMessageId = null;
         return decrypted;
     }
 
-    function showMessage(message, id) {        
+    function showMessage(message, pseudo) {        
+        console.log(lastUserMessagePseudo, pseudo, (lastUserMessagePseudo === pseudo));
         let spacer = '\n';
-        if (lastUserMessageId != id) {
-            spacer = '\n\n';
-            lastUserMessageId = id;
+        if (pseudo !== myPseudo) {
+            spacer = '\n\t';            
         }
-        console.log(id, myId, (id === myId));
-        
+        lastUserMessagePseudo = pseudo;
         messages.textContent += `${spacer}${message}`;
         messages.scrollTop = messages.scrollHeight;
         
@@ -84,7 +85,8 @@ let lastUserMessageId = null;
             console.log('Connection opened!');
             ws.send(JSON.stringify({
                 meta: 'join',
-                room: roomId
+                room: roomId,
+                pseudo: myPseudo
             }));
         }
         ws.onmessage = ({
@@ -93,13 +95,14 @@ let lastUserMessageId = null;
 
         ws.onclose = function () {
             ws = null;
-            showMessage("Déconnecté tentative de reconnexion ...");
+            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo');
             init();
         }
         window.onbeforeunload = function () {
             ws.send(JSON.stringify({
                 meta: 'leave',
-                room: roomId
+                room: roomId,
+                pseudo: myPseudo,
             }));
         }
     }
@@ -113,7 +116,7 @@ let lastUserMessageId = null;
         }
 
         if (!ws) {
-            showMessage("No WebSocket connection :(");
+            showMessage("No WebSocket connection :(", 'msgInfo');
             return;
         }
         
@@ -124,10 +127,11 @@ let lastUserMessageId = null;
         ws.send(JSON.stringify({
             meta: 'message',
             message: msgEnc,
-            room: roomId
+            room: roomId,
+            pseudo: myPseudo,
         }));
 
-        showMessage(messageBox.value, myId);
+        showMessage(messageBox.value, myPseudo);
         messageBox.value = '';
     }
 
