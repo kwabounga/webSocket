@@ -24,7 +24,7 @@ let lastUserMessagePseudo = null;
             
         } else if (meta === 'connexion') {
             if (id !== myId) {
-                showMessage('>> ' + pseudo + ' est connecté', pseudo);
+                showMessage('>> ' + pseudo + ' est connecté', pseudo, true);
             } else {
                 const history = obj.history;
                 console.log(history);
@@ -34,14 +34,14 @@ let lastUserMessagePseudo = null;
                     let repText = ((h[3]=== myPseudo)?d:`${h[3]} dit: ${d}`);
                     showMessage(repText, h[3]);
                 });
-                showMessage('vous est connecté à la room ' + room, pseudo);
+                showMessage('vous est connecté à la room ' + room, pseudo, true);
             }
         } else if (meta === 'message') {
             let decrypted = decryptAndShow(message);
-            let repText = `- ${pseudo} dit: ${decrypted}`
+            let repText = `(${pseudo}) - ${decrypted}`
             if(id !== myId)showMessage(repText, pseudo);
         } else if (meta === 'leave') {
-            showMessage('>> ' + pseudo + ' est parti', pseudo);
+            showMessage('>> ' + pseudo + ' est parti', pseudo, true);
         }
     }
 
@@ -57,17 +57,7 @@ let lastUserMessagePseudo = null;
         return decrypted;
     }
 
-    function showMessage(message, pseudo) {        
-        console.log(lastUserMessagePseudo, pseudo, (lastUserMessagePseudo === pseudo));
-        let spacer = '\n';
-        if (pseudo !== myPseudo) {
-            spacer = '\n\t';            
-        }
-        lastUserMessagePseudo = pseudo;
-        messages.textContent += `${spacer}${message}`;
-        messages.scrollTop = messages.scrollHeight;
-        
-    }
+    
 
     function init() {
         if (ws) {
@@ -95,7 +85,7 @@ let lastUserMessagePseudo = null;
 
         ws.onclose = function () {
             ws = null;
-            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo');
+            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo', true);
             init();
         }
         window.onbeforeunload = function () {
@@ -159,3 +149,56 @@ function Decrypt(encrypted, keyPhrase) {
     let decrypted = CryptoJS.AES.decrypt(encrypted, keyPhrase);
     return decrypted.toString(CryptoJS.enc.Utf8);
 }
+
+function showMessage(message, pseudo, isInfo = false) {        
+    console.log(lastUserMessagePseudo, pseudo, (lastUserMessagePseudo === pseudo));
+    let spacer = '\n';
+    if (pseudo !== myPseudo) {
+        spacer = '\n\t';            
+    }
+    lastUserMessagePseudo = pseudo;
+    let mb = isInfo?createInfoMessage(message, pseudo):createMessage(message, pseudo)
+    // messages.textContent += `${spacer}${message}`;
+    messages.appendChild(mb);
+    messages.scrollTop = messages.scrollHeight;
+    
+}
+
+
+function createMessage(message, pseudo) {
+    console.log(message, pseudo);
+    let msgBox = document.createElement('div');
+    msgBox.classList.add('msgBox');
+    if (pseudo === myPseudo) {
+        msgBox.classList.add('myMsgs');
+        msgBox.setAttribute('title','(vous)');            
+    } else {
+        msgBox.setAttribute('title','('+pseudo+')');
+    }
+    let avatar = document.createElement('div');
+    avatar.classList.add('avatar');
+    avatar.innerHTML = pseudo.slice(0,2);
+    
+    let msgText = document.createElement('div');
+    msgText.classList.add('msgText');
+    msgText.innerHTML = message;
+
+    msgBox.appendChild(avatar);
+    msgBox.appendChild(msgText);
+    return msgBox;
+
+}
+function createInfoMessage(message, pseudo) {
+    console.log(message, pseudo);
+    let msgBox = document.createElement('div');
+    msgBox.classList.add('infoBox');  
+    
+    let msgText = document.createElement('div');
+    msgText.classList.add('msgText');
+    msgText.innerHTML = message;
+    
+    msgBox.appendChild(msgText);
+    return msgBox;
+
+}
+

@@ -2,17 +2,16 @@
 <html lang="fr">
 
 <head>
-  <%- include('../partials/head'); %> 
+  <%- include('../partials/head'); %>
   <link rel="stylesheet" href="<%= baseUrl %>public/style.css">
 </head>
 <style>
- 
   .box {
     display: block;
     width: 500px;
     padding: 40px;
     /* position: relative; */
-    
+
     background: #191919;
     ;
     text-align: center;
@@ -64,33 +63,37 @@
     transition: 0.25s;
     cursor: pointer
   }
+
   #create {
     border: 2px solid #1dcdec;
   }
+
   #create:hover {
     background: #1dcdec;
   }
+
   .box input[type="submit"]:hover {
     background: #2ecc71
   }
-  
-
 </style>
+
 <body>
 
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-          <div class="box">
-            <h1>Rejoindre une conversation</h1>
-            <p class="text-muted"> Créer une nouvelle conversation ou rejoindre une existante!</p>
-            <input type="text" id="roomId" placeholder="Room ID", value="<%= roomId %>"> 
-            <input type="text" id="pseudo" placeholder="Pseudo">
-            <input type="submit" id="create" value="Creer" href="#"> <input type="submit" id="join" value="Rejoindre" href="#">
-            <div class="col-md-12 text-warning">
-              Creation d'un chat temporaire privée, encrypté, les informations seront détruites lors de la deconnexion du dernier participant
-            </div>
-          </div>        
+        <div class="box">
+          <h1>Rejoindre une conversation</h1>
+          <p class="text-muted"> Créer une nouvelle conversation ou rejoindre une existante!</p>
+          <input type="text" id="roomId" placeholder="Room ID" , value="<%= roomId %>">
+          <input type="text" id="pseudo" placeholder="Pseudo">
+          <input type="submit" id="create" value="Creer" href="#"> <input type="submit" id="join" value="Rejoindre"
+            href="#">
+          <div class="col-md-12 text-warning">
+            Creation d'un chat temporaire privée, encrypté, les informations seront détruites lors de la deconnexion du
+            dernier participant
+          </div>
+        </div>
       </div>
     </div>
   </div>

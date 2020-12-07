@@ -2,7 +2,10 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const ChatFront = require('./exports/chatFront');
-const {Encrypt, Decrypt} = require('./exports/encryption');
+const {
+  Encrypt,
+  Decrypt
+} = require('./exports/encryption');
 const port = process.env.PORT || 5000;
 const app = express();
 
@@ -11,11 +14,14 @@ app.set('view engine', 'ejs');
 const server = http.createServer(app);
 
 const rooms = {};
-function thereIsPhusion () {
-  return typeof(PhusionPassenger) !== 'undefined';
+
+function thereIsPhusion() {
+  return typeof (PhusionPassenger) !== 'undefined';
 }
 if (thereIsPhusion()) {
-  PhusionPassenger.configure({ autoInstall: false });
+  PhusionPassenger.configure({
+    autoInstall: false
+  });
 }
 
 function guid() {
@@ -68,7 +74,7 @@ wss.on("connection", socket => {
         id: uuid,
         room: room,
         meta: 'myconnexion',
-        pseudo:pseudo
+        pseudo: pseudo
       }))
       // envoi un message a tous le monde pour annoncer la connection d'un autre utilisateur
       sendMsgToAll(room, {
@@ -76,7 +82,7 @@ wss.on("connection", socket => {
         id: uuid,
         room: room,
         message: message,
-        pseudo:pseudo,
+        pseudo: pseudo,
         history: rooms[room]['history']
       })
     } else if (meta === "leave") {
@@ -87,12 +93,12 @@ wss.on("connection", socket => {
         id: uuid,
         room: room,
         message: message,
-        pseudo:pseudo
+        pseudo: pseudo
       })
 
       leave(room);
-    } else if (meta === 'message') {      
-      let h = [uuid, obj.message, obj.meta ,obj.pseudo];
+    } else if (meta === 'message') {
+      let h = [uuid, obj.message, obj.meta, obj.pseudo];
       rooms[room]['history'].push(h);
       console.log('message');
       sendMsgToAll(room, {
@@ -115,10 +121,11 @@ wss.on("connection", socket => {
 function sendMsgToAll(room, objMsg) {
   let msgHandler = JSON.stringify(objMsg);
   Object.entries(rooms[room]).forEach(([key, sock]) => {
-    if(key != 'history')sock.send(msgHandler);
+    if (key != 'history') sock.send(msgHandler);
   });
 }
 
+// index pour créer ou rejoindre une room
 app.get('/tchat/', function (req, res, next) {
   setBaseUrl(req);
   // acces de nul part sans invitation
@@ -128,7 +135,7 @@ app.get('/tchat/', function (req, res, next) {
   });
 });
 
-
+// rejoindre une room
 app.get('/tchat/room/:roomId', function (req, res, next) {
   setBaseUrl(req);
   // acces avec invitation
@@ -145,7 +152,7 @@ app.get('/tchat/room/:id/:pseudo', function (req, res, next) {
   let id = req.params.id;
   console.log('ID:', id);
   next();
-}, function (req, res, next ) {
+}, function (req, res, next) {
   // utilisation de ejs  pour envoyer des parametres au front
   res.render('pages/chat', {
     roomId: req.params.id,
@@ -154,18 +161,20 @@ app.get('/tchat/room/:id/:pseudo', function (req, res, next) {
   });
 });
 
-
-
-
-
-// route générique pour les fichier dossier public ( resources locales )
+// route générique pour les fichiers dossier public ( resources locales )
 app.get('/tchat/public/:file', function (req, res, next) {
   setBaseUrl(req);
-  res.sendFile(__dirname +'/public/'+ req.params.file);
+  res.sendFile(__dirname + '/public/' + req.params.file);
 });
 
-// TODO: faire un template quand forbidden
+//redirection vers le chat
 app.get('/tchat/*', function (req, res, next) {
+  res.redirect('/tchat/');
+});
+
+// les autres routes : 404 ou 405 a voir
+// TODO: faire un template quand forbidden
+app.get('/*', function (req, res, next) {
 
   res.send('forbidden: ' + req.url);
 });
@@ -180,12 +189,11 @@ if (thereIsPhusion()) {
 } else {
   server.listen(port, function () {
     console.log(`Server is listening on ${port}!`)
-    console.log('server:',server.path);
+    console.log('server:', server.path);
   });
 }
 
 
 function setBaseUrl(req) {
-  app.locals.baseUrl = 'https' + '://' + req.hostname+((port === process.env.PORT)?'':(':'+ port)) + '/tchat/';
+  app.locals.baseUrl = ((req.hostname  === 'localhost') ? 'http' : 'https') + '://' + req.hostname + ((req.hostname  !== 'localhost') ? '' : (':' + port)) + '/tchat/';
 }
-

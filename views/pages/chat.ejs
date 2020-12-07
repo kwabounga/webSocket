@@ -2,99 +2,202 @@
 <html lang="fr">
 
 <head>
-    <%- include('../partials/head'); %> 
+    <%- include('../partials/head'); %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"
-    integrity="sha512-t4HzsbLJw+4jV+nmiiIsz/puioH2aKIjuI1ho1NIqJAJ2GNVLPTy51IklYefYdrkRE583KEzTcgmO5Wb6jVgYw=="
-    crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="<%= baseUrl %>public/style.css"> 
+        integrity="sha512-t4HzsbLJw+4jV+nmiiIsz/puioH2aKIjuI1ho1NIqJAJ2GNVLPTy51IklYefYdrkRE583KEzTcgmO5Wb6jVgYw=="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<%= baseUrl %>public/style.css">
 </head>
 <style>
-  body {
-    display: block;
-    height: 100vh;
-    width: 100%;
-  }
+    html {
+        height: 100%;
+    }
 
-  textarea {
-    resize: none;
-  }
-  textarea {
-    border: 0;
-    background: black;
-    display: block;
-    margin-left: 20px auto;
-    margin-right: 20px auto;
-    text-align: center;
-    border: 2px solid #3498db;
-    padding: 10px 10px;
-    width: 250px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s
-  }
-  pre {
-      color:rgb(255, 221, 169);
-  }
-  #messages {
-    display: block;
-    overflow: scroll;
-    width: calc(100% - 16px);
-    height: calc(100vh - 20em);
-  }
-  #send {
-    border: 0;
-    background: rgb(0, 0, 0);
-    display: inline-block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s;
-    cursor: pointer
-  }
-  #salt,
-  #messageBox {
-    border: 0;
-    background: #5e503c;
-    display: inline-block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #ad9b83;
-    padding: 14px 40px;
-    outline: none;
-    color:  #dfcdc1;
-    border-radius: 10px;
-    transition: 0.25s;
-  }
-  #send:hover {
-    background: #2ecc71;
-  }
+    body {
+        display: block;
+        height: 100%;
+        width: 100%;
+        padding-bottom: 2em;
+        text-align: center;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    textarea {
+        border: 0;
+        background: black;
+        display: block;
+        margin-left: 20px auto;
+        margin-right: 20px auto;
+        text-align: center;
+        border: 2px solid #3498db;
+        padding: 10px 10px;
+        width: 250px;
+        outline: none;
+        color: white;
+        border-radius: 24px;
+        transition: 0.25s
+    }
+
+    pre {
+        color: rgb(255, 221, 169);
+    }
+
+    .box {
+        display: block;
+        width: 95vw;
+        height: calc(100% - 10em);
+        
+        padding: 40px;
+        /* position: relative; */
+
+        background: #191919;
+        
+        /* text-align: center; */
+        transition: 0.25s;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    #messages {
+        display: block;
+        overflow: scroll;
+        width: calc(100% - 16px - 2em);
+        height: calc(83vh - 17em);
+        text-align: left;
+    }
+
+    #salt,
+    #messageBox {
+        position: relative;
+        border: 0;
+        background: #5e503c;
+        /* display: inline-block; */
+        /* margin: 20px auto; */
+        margin-top: 1em;
+        /* margin-left: 1.5em; */
+        text-align: center;
+        border: 2px solid #ad9b83;
+        padding: 14px 40px;
+        outline: none;
+        color: #dfcdc1;
+        border-radius: 10px;
+        display: inline-block;
+        width: calc(70% - 2em);
+        /* margin: 0; */
+        /* margin-bottom: 10px; */
+        padding: 10px;
+        transition: 0.25s;
+        bottom: 2em;
+    }
+
+    #salt {
+        display: inline-block;
+        width: calc(30% - 2em);
+        margin: 0;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+
+    #send {
+        position: absolute;
+        width: calc(100% - 4em);
+        border: 0;
+        background: rgb(0, 0, 0);
+        display: inline-block;
+        margin: auto;
+        /* margin-top: 20px; */
+        text-align: center;
+        border: 2px solid #2ecc71;
+        padding: 14px 40px;
+        outline: none;
+        color: white;
+        border-radius: 24px;
+        transition: 0.25s;
+        cursor: pointer;
+        bottom: 2em;
+        left: 2em;
+    }
+
+    #send:hover {
+        background: #2ecc71;
+    }
+
+    .wrapInput {
+        position: absolute;
+        width: calc(100% - 4em);
+        bottom: 4em;
+        left: 2em;
+    }
+    .infoBox{
+        background: none;
+    }
+    .msgBox{
+        display: block;
+        padding: 0.5em;
+        background-color: #4d3d27;
+        border-radius: 1em 1em 0px 1em;
+        width: max-content;
+        margin-bottom: 0.5em;
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .myMsgs {
+        background-color: #5e503c;
+        justify-self: left;
+        border-radius: 1em 1em 1em 0px;
+        right:0;
+    }
+    .avatar {
+        display: inline-block;
+        background-color: #3b96c0;
+        width: 2em;
+        height: 2em;
+        border-radius: 1em;
+        color: #191919;
+        margin-right: 1em;
+        float: left;
+        text-align: center;
+        align-self: center;
+    }
+    .msgText {
+        display: inline;
+        color: #c0aa89;
+    }
 </style>
 
 <body>
 
-  <h1 style="width: calc(100% - 6px - 16px);">chat@kwa (<%= myPseudo %>)</h1>
-  <div>
-    <textarea id="urlToShare" name="urlToShare" rows="1" onclick="this.focus();this.select()" readonly="readonly"
-      style="width: calc(100% - 30px);"></textarea>
-  </div>
-  <pre id="messages"></pre>
-  <input type="text" id="messageBox" placeholder="Ecrire vos messages ici"
-    style="display: inline-block; width: calc(70% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
-  <input type="text" id="salt" placeholder="encryption key" title="change the value for more security"
-    style="display: inline-block; width: calc(30% - 25px - 16px); margin: 0;margin-bottom: 10px; padding: 10px;" />
-  <button id="send" style="width: calc(100% - 6px - 16px);" title="Ou appuyer sur la touche Entrer">Envoyer</button>
+    <h1 style="width: calc(100% - 6px - 16px);">Discution privée (<%= myPseudo %>)</h1>
+    <h3>Connecté en tant que: <%= myPseudo %></h3>
+    <div>
+        <textarea id="urlToShare" name="urlToShare" rows="1"
+            onclick="this.focus();this.select();document.execCommand('copy');" readonly="readonly"
+            style="width: calc(100% - 30px);"></textarea>
+    </div>
 
-  <!-- variable ecrite par le back lors de la creation de la page-->
-  <script>
-    var roomId = '<%= roomId %>';
-    var myPseudo = '<%= myPseudo %>';
-  </script>
-  <script src="<%= baseUrl %>public/front_chat.js"></script>
+    <div class="box">
+        <div id="messages" class=""></div>
+        <div class="wrapInput">
+            <input type="text" id="messageBox" placeholder="Ecrire vos messages ici" />
+            <input type="text" id="salt" placeholder="encryption key" title="change the value for more security" />
+        </div>
+
+        <button id="send" title="Ou appuyer sur la touche Entrer">Envoyer</button>
+    </div>
+
+
+    <!-- variable ecrite par le back lors de la creation de la page-->
+    <script>
+        var roomId = '<%= roomId %>';
+        var myPseudo = '<%= myPseudo %>';
+    </script>
+    <script src="<%= baseUrl %>public/front_chat.js"></script>
 </body>
 
 </html>

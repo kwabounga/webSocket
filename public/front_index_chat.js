@@ -34,7 +34,7 @@ function pseudo() {
     return (pseudoField.value.trim() !== '' ? pseudoField.value.trim() : false);
 }
 function room() {
-    return (roomIdField.value.trim() !== '' ? roomIdField.value.trim() : false);
+    return (roomIdField.value.replaceAll('/','').trim() !== '' ? roomIdField.value.replaceAll('/','').trim() : false);
 }
 function generateRoomNewRoomID() {
     rand = function () {
