@@ -64,6 +64,7 @@ wss.on("connection", socket => {
     const meta = obj.meta;
     const room = obj.room;
     const pseudo = obj.pseudo;
+    const color = obj.color;
 
     if (meta === "join") {
       console.log('join');
@@ -72,7 +73,7 @@ wss.on("connection", socket => {
         rooms[room]['history'] = [];
       }
       if (!rooms[room][uuid]) rooms[room][uuid] = socket; // join the room
-      if (!userColors[uuid]) userColors[uuid] = ('#' + Math.floor(Math.random()*16777215).toString(16)); // create a random color()
+      if (!userColors[uuid]) userColors[uuid] = (color!== null)?color:('#' + Math.floor(Math.random()*16777215).toString(16)); // create a random color()
 
       //s'envoi un message a lui meme pour  valider et afficher la connexion
       socket.send(JSON.stringify({

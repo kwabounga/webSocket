@@ -83,7 +83,8 @@ let timeOutTitle;
             ws.send(JSON.stringify({
                 meta: 'join',
                 room: roomId,
-                pseudo: myPseudo
+                pseudo: myPseudo,
+                color: myColor
             }));
         }
         ws.onmessage = ({
@@ -92,7 +93,7 @@ let timeOutTitle;
 
         ws.onclose = function () {
             ws = null;
-            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo',myColor, true);
+            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo', myColor, true);
             init();
         }
         window.onbeforeunload = function () {
