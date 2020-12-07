@@ -7,6 +7,7 @@ let timeOutTitle;
     const messages = document.querySelector('#messages');
     const messageBox = document.querySelector('#messageBox');
     const urlToShare = document.querySelector('#urlToShare');
+    const salt = document.querySelector('#salt');
 
     let ws;
 
@@ -32,7 +33,7 @@ let timeOutTitle;
                 messages.textContent = '';
                 history.forEach(h => {
                     let d = decryptAndShow(h[1])
-                    let repText = ((h[3]=== myPseudo)?d:`${h[3]} dit: ${d}`);
+                    let repText = ((h[3]=== myPseudo)?d:`${h[3]} a dit: ${d}`);
                     showMessage(repText, h[3]);
                 });
                 showMessage('vous est connecté à la room ' + room, pseudo, true);
@@ -42,7 +43,7 @@ let timeOutTitle;
             let repText = `(${pseudo}) - ${decrypted}`
             if(id !== myId) {
                 showMessage(repText, pseudo);
-                changeTitle(pseudo + ' à envoyé un message!')
+                changeTitle(pseudo + ' a envoyé un message!')
             }
         } else if (meta === 'leave') {
             showMessage('>> ' + pseudo + ' est parti', pseudo, true);
@@ -50,7 +51,7 @@ let timeOutTitle;
     }
 
     function getSalt() {
-        return document.getElementById('salt').value;
+        return salt.value;
     }
 
     function decryptAndShow(encryptedMessage) {
@@ -147,6 +148,15 @@ let timeOutTitle;
     })
     sendBtn.onclick = sendMessageHandler
 
+
+    salt.addEventListener('focus', function(){
+        salt.setAttribute('placeHolder', 'Attention!')
+        changeTitle('Veillez à bien communiquer la clé avant de changer', 3000)
+
+    })
+    salt.addEventListener('blur', function(){
+        salt.setAttribute('placeHolder', 'encryption key')
+    })
     init();
 })();
 
@@ -216,10 +226,16 @@ function createInfoMessage(message, pseudo) {
 
 }
 
-function changeTitle(tmpTitle) {
+function changeTitle(tmpTitle, time = 2000) {
     if(timeOutTitle)clearTimeout(timeOutTitle);
     timeOutTitle = setTimeout(function(){
         window.document.title = 'Chat';
     },2000)
     window.document.title = tmpTitle;
+}
+function copyToClipBoard(elment) {
+    elment.focus();
+    elment.select();
+    document.execCommand('copy');
+    changeTitle( 'Copié!', 1000);
 }

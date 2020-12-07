@@ -207,9 +207,9 @@
     <h3>Connecté en tant que: <%= myPseudo %></h3>
     <div id="urlToShareWrapper">
         <textarea id="urlToShare" name="urlToShare" rows="1"
-            onclick="this.focus();this.select();document.execCommand('copy');" readonly="readonly"
+            onclick="copyToClipBoard(urlToShare)" readonly="readonly"
             style=""></textarea>
-            <i class="fas fa-clipboard" onclick="urlToShare.focus();urlToShare.select();document.execCommand('copy');"
+            <i class="fas fa-clipboard" onclick="copyToClipBoard(urlToShare)"
             style="align-self: center;"></i>
     </div>
 
