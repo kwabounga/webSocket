@@ -1,4 +1,5 @@
 let myId = null;
+let myColor = null;
 let lastUserMessagePseudo = null;
 
 let timeOutTitle;
@@ -19,14 +20,15 @@ let timeOutTitle;
         const room = obj.room;
         const id = obj.id;
         const pseudo = obj.pseudo;
+        const color = obj.color;
         if (meta === 'myconnexion') {
             myId = id;
-            
+            myColor = color;
             urlToShare.innerText = window.location.href.replace(('/' + myPseudo), '');
             
         } else if (meta === 'connexion') {
             if (id !== myId) {
-                showMessage('>> ' + pseudo + ' est connecté', pseudo, true);
+                showMessage('>> ' + pseudo + ' est connecté', pseudo,color, true);
             } else {
                 const history = obj.history;
                 console.log(history);
@@ -34,19 +36,19 @@ let timeOutTitle;
                 history.forEach(h => {
                     let d = decryptAndShow(h[1])
                     let repText = ((h[3]=== myPseudo)?d:`${h[3]} a dit: ${d}`);
-                    showMessage(repText, h[3]);
+                    showMessage(repText, h[3], h[2]);
                 });
-                showMessage('vous est connecté à la room ' + room, pseudo, true);
+                showMessage('vous est connecté à la room ' + room, pseudo,myColor, true);
             }
         } else if (meta === 'message') {
             let decrypted = decryptAndShow(message);
             let repText = `(${pseudo}) - ${decrypted}`
             if(id !== myId) {
-                showMessage(repText, pseudo);
+                showMessage(repText, pseudo, color);
                 changeTitle(pseudo + ' a envoyé un message!')
             }
         } else if (meta === 'leave') {
-            showMessage('>> ' + pseudo + ' est parti', pseudo, true);
+            showMessage('>> ' + pseudo + ' est parti', pseudo,color, true);
         }
     }
 
@@ -90,7 +92,7 @@ let timeOutTitle;
 
         ws.onclose = function () {
             ws = null;
-            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo', true);
+            showMessage("Déconnecté tentative de reconnexion ...", 'msgInfo','#3b96c0', true);
             init();
         }
         window.onbeforeunload = function () {
@@ -111,7 +113,7 @@ let timeOutTitle;
         }
 
         if (!ws) {
-            showMessage("No WebSocket connection :(", 'msgInfo');
+            showMessage("No WebSocket connection :(", 'msgInfo','#3b96c0',true);
             return;
         }
         
@@ -126,7 +128,7 @@ let timeOutTitle;
             pseudo: myPseudo,
         }));
         
-        showMessage(messageBox.value, myPseudo);
+        showMessage(messageBox.value, myPseudo, myColor);
         messageBox.value = '';
         messageBox.style.height = '0';
     }
@@ -180,14 +182,14 @@ function Decrypt(encrypted, keyPhrase) {
     return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-function showMessage(message, pseudo, isInfo = false) {        
+function showMessage(message, pseudo, color='#3b96c0', isInfo = false) {        
     console.log(lastUserMessagePseudo, pseudo, (lastUserMessagePseudo === pseudo));
-    let spacer = '\n';
-    if (pseudo !== myPseudo) {
-        spacer = '\n\t';            
-    }
+    // let spacer = '\n';
+    // if (pseudo !== myPseudo) {
+    //     spacer = '\n\t';            
+    // }
     lastUserMessagePseudo = pseudo;
-    let mb = isInfo?createInfoMessage(message, pseudo):createMessage(message, pseudo)
+    let mb = isInfo?createInfoMessage(message, pseudo):createMessage(message, pseudo, color)
     // messages.textContent += `${spacer}${message}`;
     messages.appendChild(mb);
     messages.scrollTop = messages.scrollHeight;
@@ -195,7 +197,7 @@ function showMessage(message, pseudo, isInfo = false) {
 }
 
 
-function createMessage(message, pseudo) {
+function createMessage(message, pseudo,color) {
     console.log(message, pseudo);
     let msgBox = document.createElement('div');
     msgBox.classList.add('msgBox');
@@ -208,7 +210,7 @@ function createMessage(message, pseudo) {
     let avatar = document.createElement('div');
     avatar.classList.add('avatar');
     avatar.innerHTML = pseudo.slice(0,2);
-    
+    avatar.style ="background-color:"+color+";"
     let msgText = document.createElement('div');
     msgText.classList.add('msgText');
     msgText.innerText = message;

@@ -14,6 +14,7 @@ app.set('view engine', 'ejs');
 const server = http.createServer(app);
 
 const rooms = {};
+const userColors = {};
 
 function thereIsPhusion() {
   return typeof (PhusionPassenger) !== 'undefined';
@@ -40,6 +41,9 @@ wss.on("connection", socket => {
 
   const leave = room => {
     // not present: do nothing
+    if (userColors[uuid]){
+      delete userColors[uuid];
+    }
     if (!rooms[room][uuid]) return;
 
     // if the one exiting is the last one, destroy the room
@@ -68,12 +72,14 @@ wss.on("connection", socket => {
         rooms[room]['history'] = [];
       }
       if (!rooms[room][uuid]) rooms[room][uuid] = socket; // join the room
+      if (!userColors[uuid]) userColors[uuid] = ('#' + Math.floor(Math.random()*16777215).toString(16)); // create a random color()
 
       //s'envoi un message a lui meme pour  valider et afficher la connexion
       socket.send(JSON.stringify({
         id: uuid,
         room: room,
         meta: 'myconnexion',
+        color: userColors[uuid],
         pseudo: pseudo
       }))
       // envoi un message a tous le monde pour annoncer la connection d'un autre utilisateur
@@ -83,6 +89,7 @@ wss.on("connection", socket => {
         room: room,
         message: message,
         pseudo: pseudo,
+        color: userColors[uuid],
         history: rooms[room]['history']
       })
     } else if (meta === "leave") {
@@ -93,12 +100,13 @@ wss.on("connection", socket => {
         id: uuid,
         room: room,
         message: message,
+        color: userColors[uuid],
         pseudo: pseudo
       })
 
       leave(room);
     } else if (meta === 'message') {
-      let h = [uuid, obj.message, obj.meta, obj.pseudo];
+      let h = [uuid, obj.message, userColors[uuid], obj.pseudo];
       rooms[room]['history'].push(h);
       console.log('message');
       sendMsgToAll(room, {
@@ -107,6 +115,7 @@ wss.on("connection", socket => {
         room: room,
         message: message,
         pseudo: pseudo,
+        color: userColors[uuid]
       })
     }
   });
