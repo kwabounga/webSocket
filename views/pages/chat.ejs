@@ -64,11 +64,11 @@
 
 
     #messages {
-        display: block;
+        display: grid;
         overflow: scroll;
         width: calc(100% - 16px - 2em);
         height: calc(83vh - 17em);
-        text-align: left;
+        align-items : baseline;
     }
 
     #salt,
@@ -145,13 +145,18 @@
         margin-bottom: 0.5em;
         max-width: 100%;
         height: auto;
+        place-self: start end;
+    }
+    .msgBox::after {
+        clear: both;
     }
     
     .myMsgs {
         background-color: #5e503c;
-        justify-self: left;
+        /* justify-self: left; */
         border-radius: 1em 1em 1em 0px;
         right:0;
+        place-self: start start;
     }
     .avatar {
         display: inline-block;
