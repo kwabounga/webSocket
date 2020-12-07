@@ -150,8 +150,14 @@ let timeOutTitle;
 
 
     salt.addEventListener('focus', function(){
-        salt.setAttribute('placeHolder', 'Attention!')
-        changeTitle('Veillez à bien communiquer la clé avant de changer', 3000)
+        if(confirm('Veillez à bien communiquer la clé avant de changer de valeur. Les autres utilisateurs ne pourront plus voir vos messages sans celle-ci')){
+            salt.setAttribute('placeHolder', 'Attention!')
+            changeTitle('Veillez à bien communiquer la clé avant de changer', 3000)
+            salt.focus();
+        } else {
+            messageBox.focus();
+        }
+        
 
     })
     salt.addEventListener('blur', function(){
