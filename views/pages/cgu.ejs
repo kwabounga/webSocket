@@ -17,12 +17,15 @@
     background-color:  #5e503c
   }
   
-  .box h1 {
-    color: white;
+  h1 {
     text-transform: uppercase;
-    font-weight: 500
+    color:white;
+    font-weight: 450;
   }
-
+  h3 {
+    
+    color: rgb(236, 177, 110);
+  }
 
   a[type="submit"] {
     border: 0;
@@ -51,7 +54,10 @@
     background: #eccd1d;
   }
   
-
+  .text-muted {
+    color: #d1cbb7!important;
+    font-weight: 23;
+  }
   
 </style>
 
@@ -61,8 +67,7 @@
     <div class="row">
       <div class="col-md-12">
         
-          <h1>Conditions générales d'utilisation</h1>
-          
+          <h1>Conditions générales d'utilisation</h1>          
           <%- include('../partials/cgus/txt_cgu_termes_conditions.ejs'); %>
           <%- include('../partials/cgus/txt_cgu_responsability.ejs'); %>
           <%- include('../partials/cgus/txt_cgu_utilisateurs_serv.ejs'); %>
