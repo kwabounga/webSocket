@@ -4,6 +4,17 @@ const roomIdField = document.getElementById('roomId');
 const pseudoField = document.getElementById('pseudo');
 const cguCheckbox = document.getElementById('cgu');
 
+cguCheckbox.addEventListener('click', function(){
+    if(cguCheckbox.checked){
+        ajaxPost('http://' + window.location.host + '/tchat/cgu/validate',null,function(data){
+
+        })
+    }else {
+        ajaxPost('http://' + window.location.host + '/tchat/cgu/invalidate',null,function(data){
+            
+        })
+    }
+})
 
 btCreate.addEventListener('click', function () {
     // console.log('click on create');
@@ -40,6 +51,7 @@ btJoin.addEventListener('click', function () {
         pseudoField.focus();
     }
 })
+// read cookie by name
 
 function cguAccepted() {
     return (cguCheckbox.checked);
@@ -59,6 +71,34 @@ function generateRoomNewRoomID() {
 function getResourceUrl(resource) {
     return window.location.host + '/tchat/public/' + resource 
 }
+function ajaxPost (url, data, callback, isJson = true) {
+    var req = new XMLHttpRequest()
+    req.open('POST', url)
+    req.addEventListener('load', function () {
+        if (req.status >= 200 && req.status < 400) {
+            // Appelle la fonction callback en lui passant la réponse de la requête
+            callback(req.responseText)
+        } else {
+            console.error(req.status + ' ' + req.statusText + ' ' + url)
+        }
+    })
+    req.addEventListener('error', function () {
+        console.error('Erreur réseau avec l\'URL ' + url)
+    })
+    if (isJson) {
+        // Définit le contenu de la requête comme étant du JSON
+        req.setRequestHeader('Content-Type', 'application/json')
+        // Transforme la donnée du format JSON vers le format texte avant l'envoi
+        data = JSON.stringify(data)
+    }
+    req.send(data)
+}
 window.onload = function(){
-    cguCheckbox.checked = false;
+    console.log('cookies cgu:',getCookie('cgus'));
+    let cguAreAccepted = getCookie('cgus') === 'accepted';
+    if(cguAreAccepted){
+        cguCheckbox.checked = true;
+    } else {
+        cguCheckbox.checked = false;
+    }
 }

@@ -4,7 +4,17 @@ let lastUserMessagePseudo = null;
 let version = null;
 
 let timeOutTitle;
-(function () {
+
+if(!cguAccepted()){
+    if(confirm('Vous devez accepter les conditions générales d\'utilisations pour utiliser nos services')){
+        window.location = 'http://' + window.location.host + '/tchat/room/' + roomId;
+    }else {
+        window.location = 'http://' + window.location.host + '/tchat/cgu/invalidate';
+    }    
+}
+window.onload = function () {
+    
+
     const sendBtn = document.querySelector('#send');
     const messages = document.querySelector('#messages');
     const messageBox = document.querySelector('#messageBox');
@@ -176,7 +186,7 @@ let timeOutTitle;
         salt.setAttribute('placeHolder', 'encryption key')
     })
     init();
-})();
+}
 
 
 
@@ -256,4 +266,14 @@ function copyToClipBoard(elment) {
     elment.select();
     document.execCommand('copy');
     changeTitle( 'Copié!', 1000);
+}
+
+
+function cguAccepted(){
+    console.log('cookies cgu:',getCookie('cgus'));
+    let cguAreAccepted = getCookie('cgus') === 'accepted';
+    if(cguAreAccepted){
+        return true;
+    } 
+    return false;
 }

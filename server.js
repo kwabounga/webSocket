@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
-const ChatFront = require('./exports/chatFront');
+const cookieSession = require('cookie-session');
 const {
   Encrypt,
   Decrypt
@@ -9,6 +9,12 @@ const {
 const port = process.env.PORT || 5000;
 const app = express();
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['cgu'],
+  // Cookie Options
+  maxAge: -1 // 3 hours
+}));
 app.set('view engine', 'ejs');
 
 const server = http.createServer(app);
@@ -185,6 +191,26 @@ app.get('/tchat/public/:file', function (req, res, next) {
 });
 
 // route cgu
+app.get('/tchat/cgu/validate', function (req, res, next) {
+  //req.session.cgus = 'accepted';
+  res.cookie('cgus', 'accepted');
+  res.redirect('/tchat/');
+});
+app.post('/tchat/cgu/validate', function (req, res, next) {
+  //req.session.cgus = 'accepted';
+  res.cookie('cgus', 'accepted');
+  res.send('ok');
+});
+app.get('/tchat/cgu/invalidate', function (req, res, next) {
+  //req.session.cgus = 'refused';
+  res.cookie('cgus', 'refused');
+  res.redirect('http://google.fr');
+});
+app.post('/tchat/cgu/invalidate', function (req, res, next) {
+  //req.session.cgus = 'accepted';
+  res.cookie('cgus', 'refused');
+  res.send('ok');
+});
 app.get('/tchat/cgu', function (req, res, next) {
   setBaseUrl(req);
   res.render('pages/cgu', {
@@ -203,7 +229,8 @@ app.get('/tchat/*', function (req, res, next) {
 // les autres routes : 404 ou 405 à voir
 // TODO: faire un template quand forbidden
 app.get('/*', function (req, res, next) {
-  res.send('forbidden: ' + req.url);
+  //req.session.cgus = (req.session.cgus || 'unsigned')
+  res.send('forbidden: ' + req.url + 'cookies-sessions: ' + req.session.cgus);
 });
 
 
