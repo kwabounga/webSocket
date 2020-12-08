@@ -40,19 +40,21 @@ wss.on("connection", socket => {
   const uuid = guid(); // create here a uuid for this connection
 
   const leave = room => {
-    // not present: do nothing
+    
+    // suppression de la couleur
     if (userColors[uuid]){
       delete userColors[uuid];
     }
+    // pas de room: ne rien faire
     if (!rooms[room][uuid]) return;
 
-    // if the one exiting is the last one, destroy the room
+    // l'utilisateur en train de quitter est le dernier: suppression de la room
     if (Object.keys(rooms[room]).length === 1) {
       console.log('destruction of the room:', room);
       delete rooms[room];
     } else {
       console.log('rage quit of :', uuid);
-      // otherwise simply leave the room
+      // sinon suppression de room
       delete rooms[room][uuid];
     }
   };
@@ -69,13 +71,13 @@ wss.on("connection", socket => {
     if (meta === "join") {
       console.log('join');
       if (!rooms[room]) {
-        rooms[room] = {}; // create the room
+        rooms[room] = {}; // creation de la room
         rooms[room]['history'] = [];
       }
-      if (!rooms[room][uuid]) rooms[room][uuid] = socket; // join the room
+      if (!rooms[room][uuid]) rooms[room][uuid] = socket; // rejoins la room
       if (!userColors[uuid]) userColors[uuid] = (color!== null)?color:('#' + Math.floor(Math.random()*16777215).toString(16)); // create a random color()
 
-      //s'envoi un message a lui meme pour  valider et afficher la connexion
+      //s'envoi un message à lui même pour  valider et afficher la connexion
       socket.send(JSON.stringify({
         id: uuid,
         room: room,
@@ -84,7 +86,7 @@ wss.on("connection", socket => {
         pseudo: pseudo,
         version: '0.1.7',
       }))
-      // envoi un message a tous le monde pour annoncer la connection d'un autre utilisateur
+      // envoi un message à tout le monde pour annoncer la connection d'un autre utilisateur
       sendMsgToAll(room, {
         meta: 'connexion',
         id: uuid,
@@ -108,8 +110,11 @@ wss.on("connection", socket => {
 
       leave(room);
     } else if (meta === 'message') {
+      // creation d'une entrée pour l'historique temp
       let h = [uuid, obj.message, userColors[uuid], obj.pseudo];
+      // ajout de l'entrée
       rooms[room]['history'].push(h);
+      // envoi le message à tout le monde
       console.log('message');
       sendMsgToAll(room, {
         meta: 'message',
@@ -123,7 +128,7 @@ wss.on("connection", socket => {
   });
 
   socket.on("close", () => {
-    // for each room, remove the closed socket
+    // pour chaque room on retire le socket
     Object.keys(rooms).forEach(room => leave(room));
   });
 });
@@ -160,6 +165,7 @@ app.get('/tchat/room/:roomId', function (req, res, next) {
 // connection au chat avec n° de room et pseudo
 app.get('/tchat/room/:id/:pseudo', function (req, res, next) {
   setBaseUrl(req);
+  // nb: ne sert à rien, sinon a se rappeler qu'on peut faire un next()
   let id = req.params.id;
   console.log('ID:', id);
   next();
@@ -178,7 +184,7 @@ app.get('/tchat/public/:file', function (req, res, next) {
   res.sendFile(__dirname + '/public/' + req.params.file);
 });
 
-// cgu
+// route cgu
 app.get('/tchat/cgu', function (req, res, next) {
   setBaseUrl(req);
   res.render('pages/cgu', {
@@ -194,11 +200,9 @@ app.get('/tchat/*', function (req, res, next) {
 });
 
 
-
-// les autres routes : 404 ou 405 a voir
+// les autres routes : 404 ou 405 à voir
 // TODO: faire un template quand forbidden
 app.get('/*', function (req, res, next) {
-
   res.send('forbidden: ' + req.url);
 });
 
@@ -212,7 +216,6 @@ if (thereIsPhusion()) {
 } else {
   server.listen(port, function () {
     console.log(`Server is listening on ${port}!`)
-    console.log('server:', server.path);
   });
 }
 
