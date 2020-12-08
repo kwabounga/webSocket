@@ -75,6 +75,10 @@
   .box input[type="submit"]:hover {
     background: #2ecc71
   }
+  input[type="checkbox" i]:focus, input[type="checkbox" i]:active  {
+    outline-offset: 2px;
+    outline: 1px solid white;
+  }
 </style>
 
 <body>
@@ -87,6 +91,9 @@
           <p class="text-muted"> Créer une nouvelle conversation ou rejoindre une existante!</p>
           <input type="text" id="roomId" placeholder="Room ID" , value="<%= roomId %>">
           <input type="text" id="pseudo" placeholder="Pseudo">
+          <input type="checkbox" id="cgu" placeholder="">
+          <label id="cgu" for="cgu">j'accepte les <a href="<%= baseUrl %>cgu">conditions générales d'utilisation</a></label>
+
           <input type="submit" id="create" value="Creer" href="#"> <input type="submit" id="join" value="Rejoindre"
             href="#">
           <div class="col-md-12 text-warning">
