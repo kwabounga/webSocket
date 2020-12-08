@@ -152,8 +152,7 @@ app.get('/tchat/', function (req, res, next) {
   setBaseUrl(req);
   // acces de nul part sans invitation
   res.render('pages/index', {
-    roomId: '',
-    baseSrc: '../'
+    roomId: ''
   });
 });
 
@@ -162,8 +161,7 @@ app.get('/tchat/room/:roomId', function (req, res, next) {
   setBaseUrl(req);
   // acces avec invitation
   res.render('pages/index', {
-    roomId: req.params.roomId,
-    baseSrc: '../../'
+    roomId: req.params.roomId
   });
 });
 
@@ -179,8 +177,7 @@ app.get('/tchat/room/:id/:pseudo', function (req, res, next) {
   // utilisation de ejs  pour envoyer des parametres au front
   res.render('pages/chat', {
     roomId: req.params.id,
-    myPseudo: req.params.pseudo,
-    baseSrc: '../../'
+    myPseudo: req.params.pseudo
   });
 });
 
@@ -215,8 +212,7 @@ app.get('/tchat/cgu', function (req, res, next) {
   setBaseUrl(req);
   res.render('pages/cgu', {
     roomId: req.params.id,
-    myPseudo: req.params.pseudo,
-    baseSrc: '../../'
+    myPseudo: req.params.pseudo
   });
 });
 

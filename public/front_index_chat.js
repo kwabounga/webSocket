@@ -6,11 +6,11 @@ const cguCheckbox = document.getElementById('cgu');
 
 cguCheckbox.addEventListener('click', function(){
     if(cguCheckbox.checked){
-        ajaxPost('http://' + window.location.host + '/tchat/cgu/validate',null,function(data){
+        ajaxPost(baseUrl + 'cgu/validate',null,function(data){
 
         })
     }else {
-        ajaxPost('http://' + window.location.host + '/tchat/cgu/invalidate',null,function(data){
+        ajaxPost(baseUrl + 'cgu/invalidate',null,function(data){
             
         })
     }
@@ -21,7 +21,7 @@ btCreate.addEventListener('click', function () {
     if (pseudo()) {
         // console.log('ok pseudo is ', pseudo());
         if(cguAccepted()){
-            let url = 'http://' + window.location.host + '/tchat/room/' + generateRoomNewRoomID()+'/'+pseudo();
+            let url = baseUrl + 'room/' + generateRoomNewRoomID()+'/'+pseudo();
             window.location = url;
         } else {
             cguCheckbox.focus();
@@ -38,7 +38,7 @@ btJoin.addEventListener('click', function () {
         // console.log('ok pseudo is ', pseudo());
         if(room()){
             if(cguAccepted()){
-                let url = 'http://' + window.location.host + '/tchat/room/' + room()+'/'+pseudo();     
+                let url = baseUrl + 'room/' + room()+'/'+pseudo();     
             window.location = url;
             } else {
                 cguCheckbox.focus();
@@ -68,9 +68,7 @@ function generateRoomNewRoomID() {
     }
     return rand() + '-' + rand() + '-' + rand() + '-' + rand() + '-' + rand();
 }
-function getResourceUrl(resource) {
-    return window.location.host + '/tchat/public/' + resource 
-}
+
 function ajaxPost (url, data, callback, isJson = true) {
     var req = new XMLHttpRequest()
     req.open('POST', url)
