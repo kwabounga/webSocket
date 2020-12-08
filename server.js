@@ -178,10 +178,22 @@ app.get('/tchat/public/:file', function (req, res, next) {
   res.sendFile(__dirname + '/public/' + req.params.file);
 });
 
+// cgu
+app.get('/tchat/cgu', function (req, res, next) {
+  setBaseUrl(req);
+  res.render('pages/cgu', {
+    roomId: req.params.id,
+    myPseudo: req.params.pseudo,
+    baseSrc: '../../'
+  });
+});
+
 //redirection vers le chat
 app.get('/tchat/*', function (req, res, next) {
   res.redirect('/tchat/');
 });
+
+
 
 // les autres routes : 404 ou 405 a voir
 // TODO: faire un template quand forbidden

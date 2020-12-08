@@ -11,6 +11,8 @@ let timeOutTitle;
     const urlToShare = document.querySelector('#urlToShare');
     const salt = document.querySelector('#salt');
 
+    const notif = document.getElementById('notification');
+    notif.volume = 0.5;
     let ws;
 
     function wsResponse(data) {
@@ -49,6 +51,7 @@ let timeOutTitle;
             let decrypted = decryptAndShow(message);
             let repText = `(${pseudo}) - ${decrypted}`
             if(id !== myId) {
+                notif.play();
                 showMessage(repText, pseudo, color);
                 changeTitle(pseudo + ' a envoyé un message!')
             }
