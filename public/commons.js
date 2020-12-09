@@ -25,6 +25,7 @@ function setCookie(name, value, daysToLive) {
     
     if(typeof daysToLive === "number") {
         cookie += "; max-age=" + (daysToLive*24*60*60);
-        document.cookie = cookie;
     }
+    cookie += "; SameSite=None";
+    document.cookie = cookie;
 }
