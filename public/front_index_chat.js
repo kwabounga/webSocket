@@ -93,10 +93,20 @@ function ajaxPost (url, data, callback, isJson = true) {
 }
 window.onload = function(){
     console.log('cookies cgu:',getCookie('cgus'));
-    let cguAreAccepted = getCookie('cgus') === 'accepted';
+    let cguAreAccepted = cguAccepted();
     if(cguAreAccepted){
         cguCheckbox.checked = true;
     } else {
         cguCheckbox.checked = false;
     }
+}
+
+function cguAccepted(){
+    let ckCgu = getIframeCookie('cgus') || getCookie('cgus');
+    console.log('cookies cgu:',ckCgu);
+    let cguAreAccepted = ckCgu === 'accepted';
+    if(cguAreAccepted){
+        return true;
+    } 
+    return false;
 }

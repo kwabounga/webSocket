@@ -10,7 +10,7 @@ function getCookie(name) {
 }
 function getIframeCookie(name) {
     //document.getElementById("chat").contentDocument.documentElement)
-    if(!document.getElementById("chat"))return;
+    if(!document.getElementById("chat"))return null;
     var cookieArr = document.getElementById("chat").contentDocument.cookie.split(";");
     for(var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
