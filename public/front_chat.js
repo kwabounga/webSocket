@@ -270,8 +270,9 @@ function copyToClipBoard(elment) {
 
 
 function cguAccepted(){
-    console.log('cookies cgu:',getCookie('cgus'));
-    let cguAreAccepted = getCookie('cgus') === 'accepted';
+    let ckCgu = getIframeCookie('cgus') || getCookie('cgus');
+    console.log('cookies cgu:',ckCgu);
+    let cguAreAccepted = ckCgu === 'accepted';
     if(cguAreAccepted){
         return true;
     } 
