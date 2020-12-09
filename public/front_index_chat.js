@@ -102,7 +102,7 @@ window.onload = function(){
 }
 
 function cguAccepted(){
-    let ckCgu = getIframeCookie('cgus') || getCookie('cgus');
+    let ckCgu = (getIframeCookie('cgus')!== null) ? getIframeCookie('cgus') : getCookie('cgus');
     console.log('cookies cgu:',ckCgu);
     let cguAreAccepted = ckCgu === 'accepted';
     if(cguAreAccepted){
