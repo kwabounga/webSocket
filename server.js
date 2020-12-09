@@ -191,28 +191,32 @@ app.get('/tchat/public/:file', function (req, res, next) {
 app.get('/tchat/cgu/validate', function (req, res, next) {
   //req.session.cgus = 'accepted';
   res.cookie('cgus', 'accepted',{
-    sameSite: "None"
+    sameSite: "None",
+    secure: true,
   });
   res.redirect('/tchat/');
 });
 app.post('/tchat/cgu/validate', function (req, res, next) {
   //req.session.cgus = 'accepted';
   res.cookie('cgus', 'accepted',{
-    sameSite: "None"
+    sameSite: "None",
+    secure: true,
   });
   res.send('ok');
 });
 app.get('/tchat/cgu/invalidate', function (req, res, next) {
   //req.session.cgus = 'refused';
   res.cookie('cgus', 'refused',{
-    sameSite: "None"
+    sameSite: "None",
+    secure: true,
   });
   res.redirect('http://google.fr');
 });
 app.post('/tchat/cgu/invalidate', function (req, res, next) {
   //req.session.cgus = 'accepted';
   res.cookie('cgus', 'refused',{
-    sameSite: "None"
+    sameSite: "None",
+    secure: true,
   });
   res.send('ok');
 });
