@@ -190,34 +190,22 @@ app.get('/tchat/public/:file', function (req, res, next) {
 // route cgu
 app.get('/tchat/cgu/validate', function (req, res, next) {
   //req.session.cgus = 'accepted';
-  res.cookie('cgus', 'accepted',{
-    sameSite: "None",
-    secure: true,
-  });
+  res.cookie('cgus', 'accepted',getCookiesOptions(req));
   res.redirect('/tchat/');
 });
 app.post('/tchat/cgu/validate', function (req, res, next) {
   //req.session.cgus = 'accepted';
-  res.cookie('cgus', 'accepted',{
-    sameSite: "None",
-    secure: true,
-  });
+  res.cookie('cgus', 'accepted',getCookiesOptions(req));
   res.send('ok');
 });
 app.get('/tchat/cgu/invalidate', function (req, res, next) {
   //req.session.cgus = 'refused';
-  res.cookie('cgus', 'refused',{
-    sameSite: "None",
-    secure: true,
-  });
+  res.cookie('cgus', 'refused',getCookiesOptions(req));
   res.redirect('http://google.fr');
 });
 app.post('/tchat/cgu/invalidate', function (req, res, next) {
   //req.session.cgus = 'accepted';
-  res.cookie('cgus', 'refused',{
-    sameSite: "None",
-    secure: true,
-  });
+  res.cookie('cgus', 'refused', getCookiesOptions(req));
   res.send('ok');
 });
 app.get('/tchat/cgu', function (req, res, next) {
@@ -257,4 +245,11 @@ if (thereIsPhusion()) {
 
 function setBaseUrl(req) {
   app.locals.baseUrl = ((req.hostname  === 'localhost') ? 'http' : 'https') + '://' + req.hostname + ((req.hostname  !== 'localhost') ? '' : (':' + port)) + '/tchat/';
+}
+
+function getCookiesOptions(req){
+  return {
+    sameSite: (req.hostname  !== 'localhost')?"None":"Lax",
+    secure: (req.hostname  !== 'localhost'),
+  }
 }

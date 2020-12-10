@@ -13,8 +13,6 @@ if(!cguAccepted()){
     }    
 }
 window.onload = function () {
-    
-
     const sendBtn = document.querySelector('#send');
     const messages = document.querySelector('#messages');
     const messageBox = document.querySelector('#messageBox');

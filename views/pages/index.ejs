@@ -21,6 +21,8 @@
     margin-right: auto;
   }
 
+  
+
   .box input[type="text"],
   .box input[type="password"] {
     border: 0;
@@ -75,15 +77,31 @@
   .box input[type="submit"]:hover {
     background: #2ecc71
   }
-  input[type="checkbox" i]:focus, input[type="checkbox" i]:active  {
+
+  input[type="checkbox"i]:focus,
+  input[type="checkbox"i]:active {
     outline-offset: 2px;
     outline: 1px solid white;
+  }
+
+  @media (max-width: 700px) {
+    .box {
+      display: block;
+      width: 100%;
+      /* padding: 40px; */
+      margin: auto;
+      margin-top: 2em;
+    }
+
+    .box input[type="submit"] {
+      margin: 0px auto;
+    }
   }
 </style>
 
 <body>
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="box">
@@ -92,7 +110,8 @@
           <input type="text" id="roomId" placeholder="Room ID" , value="<%= roomId %>">
           <input type="text" id="pseudo" placeholder="Pseudo">
           <input type="checkbox" id="cgu" placeholder="">
-          <label id="cgu" for="cgu">j'accepte les <a href="<%= baseUrl %>cgu">conditions générales d'utilisation</a></label>
+          <label id="cgu" for="cgu">j'accepte les <a href="<%= baseUrl %>cgu">conditions générales
+              d'utilisation</a></label>
 
           <input type="submit" id="create" value="Creer" href="#"> <input type="submit" id="join" value="Rejoindre"
             href="#">
@@ -107,7 +126,7 @@
   <script>
     var roomId = '<%= roomId %>';
     var baseUrl = '<%= baseUrl %>';
-</script>
+  </script>
   <script src="<%= baseUrl %>public/commons.js"></script>
   <script src="<%= baseUrl %>public/front_index_chat.js"></script>
 </body>
